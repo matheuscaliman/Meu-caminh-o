@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meu Caminhão – Controle do Dono</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#eef1f5;--cd:#fff;--tx:#10151c;--mu:#5d6877;--ac:#8a5200;--ye:#ffb800;--bd:#d9dee6;--ok:#12703a;--okb:#dcf3e5;--wr:#8a5200;--wrb:#fdecc8;--bad:#b42318;--badb:#fde2df;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1117;--cd:#171e27;--tx:#e8edf3;--mu:#98a4b3;--ac:#ffc933;--ye:#ffb800;--bd:#2a3542;--ok:#5ad08a;--okb:#12301f;--wr:#f3b84b;--wrb:#3a2a08;--bad:#ff8a80;--badb:#3b1512;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1117;--cd:#171e27;--tx:#e8edf3;--mu:#98a4b3;--ac:#ffc933;--ye:#ffb800;--bd:#2a3542;--ok:#5ad08a;--okb:#12301f;--wr:#f3b84b;--wrb:#3a2a08;--bad:#ff8a80;--badb:#3b1512;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:84px}
+main{max-width:560px;margin:0 auto;padding:12px}
+h1{font-size:21px;margin:6px 0 12px}
+h2{font-size:15px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+h2 .i{width:20px;height:20px;color:var(--ac)}
+.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.c{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.w{grid-column:1/-1}
+label{display:block;font-size:12px;color:var(--mu);margin-bottom:2px}
+input{width:100%;font:inherit;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
+input:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+button{font:inherit;border:0;border-radius:10px;padding:12px 14px;background:var(--ye);color:#1a1300;font-weight:800;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+button:active{transform:translateY(1px);box-shadow:none}
+button.s{background:transparent;color:var(--mu);border:1px solid var(--bd);padding:5px 9px;font-weight:500;font-size:13px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--cd);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;color:var(--mu);border-radius:0;padding:9px 2px 8px;font-size:11px;font-weight:600;box-shadow:none}
+nav button.on{color:var(--ac);font-weight:800;box-shadow:inset 0 3px 0 var(--ye)}
+.big{font-size:28px;font-weight:800;line-height:1.1}
+.chip{display:inline-block;padding:4px 10px;border-radius:99px;font-weight:700;font-size:13px}
+.ok{background:var(--okb);color:var(--ok)}.wr{background:var(--wrb);color:var(--wr)}.bad{background:var(--badb);color:var(--bad)}
+.tok{color:var(--ok)}.tbad{color:var(--bad)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--bd);font-size:14px}
+.row:last-child{border:0}
+.mu{color:var(--mu);font-size:13px}
+.bar{height:6px;border-radius:4px;background:var(--bd);overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%}
+.hide{display:none}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.kp b{display:block;font-size:16px}
+.kp span{font-size:12px;color:var(--mu)}
+body.lk main,body.lk nav{display:none}
+.hd{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;padding:16px 16px 20px;border-radius:16px;background:linear-gradient(135deg,#222b36,#0a0d12);color:#fff;margin-bottom:14px}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:repeating-linear-gradient(90deg,#ffb800 0 20px,transparent 20px 34px)}
+.hd .lg{width:50px;height:50px;border-radius:13px;background:var(--ye);color:#1a1300;display:grid;place-items:center}
+.hd .lg .i{width:30px;height:30px}
+.hd b{display:block;font-size:20px;letter-spacing:.2px}
+.hd small{color:#aab4c2;font-size:12px}
+.kp>div{background:var(--bg);border-radius:10px;padding:10px 4px}
+#f-res{border-left:5px solid var(--ye)}
+.q{width:24px;height:24px;padding:0;margin-left:2px;border-radius:50%;background:var(--ye);color:#1a1300;font-size:13px;font-weight:800;line-height:24px;box-shadow:none;vertical-align:middle}
+.sw{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--bd);font-size:15px;color:var(--tx);margin:0}
+.sw:last-child{border:0}
+.sw input{width:22px;height:22px;padding:0;accent-color:var(--ye);flex:none}
+.hp{position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));max-width:536px;margin:0 auto;background:var(--cd);border:2px solid var(--ye);border-radius:14px;padding:14px;box-shadow:0 8px 28px rgba(0,0,0,.35);z-index:20}
+.hp p{margin:6px 0 10px;font-size:14px}
+select{width:100%;font:inherit;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
+nav button{position:relative}
+.nb{position:absolute;top:3px;left:calc(50% + 4px);min-width:17px;height:17px;border-radius:9px;background:#d92d20;color:#fff;font-size:11px;line-height:17px;padding:0 4px;font-weight:800}
+.rv{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--bd)}
+.rv:last-child{border:0}
+.ri{width:64px;height:64px;flex:none}
+.rf{transition:transform 1s ease}
+.rvb{flex:1;min-width:0}
+.rvh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.rva{display:flex;gap:6px;margin-top:8px}
+.g>div{min-width:0}
+input{min-width:0}
+input[type=date]{-webkit-appearance:none;appearance:none;height:46px;text-align:left;display:block}
+.pv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.pv div{background:var(--bg);border-radius:10px;padding:8px 10px}
+.pv span{display:block;font-size:11px;color:var(--mu)}
+.pv b{font-size:17px}
+.gw{display:flex;align-items:center;gap:14px}
+.gg{position:relative;width:150px;flex:none}
+.gg svg{width:100%;display:block}
+.gv{position:absolute;left:0;right:0;bottom:2px;text-align:center;line-height:1}
+.gv b{display:block;font-size:24px;font-weight:800}
+.gv span{font-size:11px;color:var(--mu)}
+.gs{flex:1;min-width:0}
+.ga{transition:stroke-dasharray 1s ease}
+.st{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-top:8px}
+.st:first-child{margin-top:0}
+.sn{width:24px;height:24px;border-radius:50%;background:var(--ye);color:#1a1300;display:grid;place-items:center;font-size:13px;font-weight:800;flex:none}
+#t-a input{font-size:18px;padding:12px}
+#t-a input[type=date]{height:50px}
+input[type=date]::-webkit-date-and-time-value{text-align:left;margin:0}
+.pv.hide{display:none}
+.pv .pw{grid-column:1/-1;margin:0;font-size:13px;color:var(--wr)}
+#a-last{display:block;margin-top:4px;font-size:13px}
+.ai{width:42px;height:42px;border-radius:12px;background:var(--ye);color:#1a1300;display:grid;place-items:center;flex:none}
+@media (prefers-reduced-motion:reduce){.ga{transition:none}}
+@keyframes pl{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.al{animation:pl 1.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.al{animation:none}.rf{transition:none}}
+.alb{display:flex;align-items:center;gap:10px;background:var(--badb);color:var(--bad);border:1px solid var(--bad);border-radius:12px;padding:12px;margin-bottom:12px;font-weight:700;font-size:14px}
+#gate{max-width:420px;margin:12vh auto 0;padding:12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg label{position:relative;margin:0;font-size:inherit;color:inherit}
+.seg input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.seg span{display:block;text-align:center;padding:13px 8px;border:2px solid var(--bd);border-radius:10px;font-weight:700;font-size:15px;color:var(--mu)}
+.seg input:checked+span{border-color:var(--ye);background:var(--ye);color:#1a1300}
+.seg input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
+.pr{background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:12px;font-size:14px}
+.pr p{margin:3px 0}
+.pr.hide{display:none}
+</style>
+</head>
+<body class="lk">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-truck" viewBox="0 0 24 24"><path d="M2 6h12v10H2zM14 9h4l4 4v3h-8z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+<symbol id="i-cash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2c-.5-1-1.5-1.5-2.6-1.5-1.5 0-2.6.8-2.6 2s1 1.7 2.7 2.1 2.7.9 2.7 2.1-1.1 2-2.7 2c-1.2 0-2.300-.6-2.8-1.6M12 6v1.7M12 16.3V18"/></symbol>
+<symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7"/></symbol>
+<symbol id="i-fuel" viewBox="0 0 24 24"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16M3 21h12M5.500 9h7M14 8h2.500a1.500 1.500 0 0 1 1.500 1.500V16a1.500 1.500 0 0 0 3 0V8.500L18.500 6"/></symbol>
+<symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.700 6.300a1 1 0 0 0 0 1.400l1.600 1.600a1 1 0 0 0 1.400 0l3.770-3.770a6 6 0 0 1-7.940 7.940l-6.910 6.910a2.120 2.120 0 0 1-3-3l6.910-6.910a6 6 0 0 1 7.940-7.940l-3.760 3.760z"/></symbol>
+<symbol id="i-gauge" viewBox="0 0 24 24"><path d="M12 14l4-5M3.300 17a9 9 0 1 1 17.400 0"/><circle cx="12" cy="14" r="1.200"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.500 8-8 9-4.500-1-8-4-8-9V6zM9 12l2 2 4-4"/></symbol>
+</defs></svg>
+<div id="gate"><div class="c"><h2><svg class="i"><use href="#i-truck"/></svg>Entrar no Meu Caminhão</h2><label for="g-e">E-mail</label><input id="g-e" type="email" autocomplete="username" inputmode="email" autocapitalize="none" style="margin-bottom:10px"><label for="g-p">Senha</label><input id="g-p" type="password" autocomplete="current-password"><button id="g-go" style="width:100%;margin-top:12px">Entrar</button><p id="g-m" class="mu">Use o e-mail e a senha que você recebeu na compra.</p></div></div>
+<main>
+<header class="hd"><span class="lg"><svg class="i"><use href="#i-truck"/></svg></span><div><b>Meu Caminhão</b><small>Controle do dono: frete, diesel e revisões</small></div></header>
+
+<section id="t-f">
+ <div class="c"><h2><svg class="i"><use href="#i-cash"/></svg>Esse frete compensa?</h2>
+  <div class="g">
+   <div class="w"><label for="f-rota">Rota (opcional)</label><input id="f-rota" type="text" placeholder="Ex.: Campinas a Curitiba"></div>
+   <div><label for="f-frete">Valor do frete (R$)</label><input id="f-frete" inputmode="decimal"></div>
+   <div><label for="f-km">Km total (ida e volta)</label><input id="f-km" inputmode="decimal"></div>
+   <div><label for="f-ped">Pedágios (R$)</label><input id="f-ped" inputmode="decimal"></div>
+   <div><label for="f-out">Outras despesas (R$)</label><input id="f-out" inputmode="decimal"></div>
+   <div><label for="f-die">Diesel (R$/L)</label><input id="f-die" inputmode="decimal"></div>
+   <div><label for="f-con">Consumo (km/L)</label><input id="f-con" inputmode="decimal"></div>
+  </div>
+ </div>
+ <div class="c" id="f-res"></div>
+ <button id="f-save" style="width:100%">Salvar nas viagens</button>
+ <p id="f-msg" class="mu"></p>
+</section>
+
+<section id="t-v" class="hide">
+ <div class="c"><h2><svg class="i"><use href="#i-route"/></svg>Mês atual</h2><div class="kp" id="v-kp"></div></div>
+ <div class="c"><h2>Lucro por mês</h2><div id="v-ch"></div></div>
+ <div class="c"><h2><svg class="i"><use href="#i-truck"/></svg>Viagens</h2><div id="v-ls"></div></div>
+</section>
+
+<section id="t-a" class="hide">
+ <div class="c" id="a-sum"></div>
+ <div class="c"><h2><svg class="i"><use href="#i-fuel"/></svg>Novo abastecimento</h2>
+  <label for="a-o">Km do painel (odômetro)</label><input id="a-o" inputmode="decimal" placeholder="Ex.: 61200"><small class="mu" id="a-last"></small>
+  <div class="g" style="margin-top:12px"><div><label for="a-l">Litros abastecidos</label><input id="a-l" inputmode="decimal" placeholder="Ex.: 240"></div><div><label for="a-p">Preço do litro (R$)</label><input id="a-p" inputmode="decimal" placeholder="Ex.: 6,90"></div></div>
+  <label style="margin-top:12px">O tanque ficou cheio?</label>
+  <div class="seg"><label><input type="radio" name="af" value="1" checked><span>Sim, encheu</span></label><label><input type="radio" name="af" value="0"><span>Não encheu</span></label></div>
+  <small class="mu" id="a-fh" style="display:block;margin-top:6px"></small>
+  <label for="a-d" style="margin-top:12px">Data</label><input id="a-d" type="date">
+  <div id="a-pv" class="pr hide"></div>
+  <button id="a-add" style="width:100%;margin-top:12px">Salvar abastecimento</button>
+  <p id="a-m" class="mu" style="margin:8px 0 0"></p>
+ </div>
+ <div class="c"><h2>Histórico</h2><div id="a-ls"></div></div>
+</section>
+
+<section id="t-m" class="hide">
+ <div id="m-al"></div>
+ <div class="c"><h2><svg class="i"><use href="#i-wrench"/></svg>Nova revisão</h2>
+  <div class="g">
+   <div class="w"><label for="m-t">Tipo</label><select id="m-t"><option value="oleo">Óleo</option><option value="freio">Freios</option><option value="filtro">Filtros</option></select></div>
+   <div class="w"><label for="m-n">O que revisar</label><input id="m-n" type="text" placeholder="Ex.: Óleo do motor"></div>
+   <div><label for="m-i">A cada quantos km</label><input id="m-i" inputmode="decimal"></div>
+   <div><label for="m-l">Feita no km (vazio = agora)</label><input id="m-l" inputmode="decimal"></div>
+  </div>
+  <button id="m-add" style="width:100%;margin-top:10px">Adicionar revisão</button>
+ </div>
+ <div class="c"><h2>Revisões</h2><p class="mu" id="m-odo"></p><div id="m-ls"></div></div>
+</section>
+
+<section id="t-c" class="hide">
+ <div class="c"><h2><svg class="i"><use href="#i-gauge"/></svg>Custos do caminhão</h2>
+  <div class="g">
+   <div><label for="c-fixo">Custos fixos por mês (R$)</label><input class="cf" data-k="fixo" id="c-fixo" inputmode="decimal"></div>
+   <div><label for="c-kmMes">Km rodados por mês</label><input class="cf" data-k="kmMes" id="c-kmMes" inputmode="decimal"></div>
+   <div><label for="c-manut">Manutenção (R$/km)</label><input class="cf" data-k="manut" id="c-manut" inputmode="decimal"></div>
+   <div><label for="c-pneu">Pneus (R$/km)</label><input class="cf" data-k="pneu" id="c-pneu" inputmode="decimal"></div>
+   <div><label for="c-pct">Comissão do motorista (% do frete)</label><input class="cf" data-k="pct" id="c-pct" inputmode="decimal"></div>
+   <div><label for="c-odo">Odômetro atual (km)</label><input class="cf" data-k="odo" id="c-odo" inputmode="decimal"></div>
+   <div><label for="c-diesel">Diesel padrão (R$/L)</label><input class="cf" data-k="diesel" id="c-diesel" inputmode="decimal"></div>
+   <div><label for="c-cons">Consumo padrão (km/L)</label><input class="cf" data-k="cons" id="c-cons" inputmode="decimal"></div>
+  </div>
+  <p class="mu">Fixos: parcela, seguro, IPVA, rastreador, contador. Use 0% de comissão se você mesmo dirige. Estes valores alimentam todas as telas.</p>
+ </div>
+ <div class="c"><h2><svg class="i"><use href="#i-cash"/></svg>O que entra no cálculo</h2><p class="mu" style="margin-top:0">Desmarque o que você não quer contar no custo do frete.</p>
+  <label class="sw"><input type="checkbox" class="tg" data-u="comb"><span>Combustível (diesel)</span></label>
+  <label class="sw"><input type="checkbox" class="tg" data-u="fixo"><span>Custos fixos rateados por km</span></label>
+  <label class="sw"><input type="checkbox" class="tg" data-u="manut"><span>Manutenção</span></label>
+  <label class="sw"><input type="checkbox" class="tg" data-u="pneu"><span>Pneus</span></label>
+  <label class="sw"><input type="checkbox" class="tg" data-u="pct"><span>Comissão do motorista</span></label>
+ </div>
+ <div id="hlp" class="hp hide" role="dialog" aria-live="polite"><b id="hlp-t"></b><p id="hlp-p"></p><button id="hlp-x" class="s">Fechar</button></div>
+ <div class="c" id="c-st"></div>
+ <div class="c"><h2><svg class="i"><use href="#i-shield"/></svg>Minha conta</h2><p class="mu" style="margin-top:0">Conectado como <b id="u-em"></b></p><button id="u-out" class="s" style="padding:10px 14px;font-size:15px">Sair da conta</button></div>
+ <div class="c"><h2><svg class="i"><use href="#i-shield"/></svg>Backup dos dados</h2><p class="mu" style="margin-top:0">Os dados ficam só neste aparelho. Copie o backup de vez em quando e guarde fora do app.</p><textarea id="b-txt" rows="3" aria-label="Texto do backup" placeholder="O backup aparece aqui. Para restaurar, cole o texto copiado antes." style="width:100%;font:inherit;font-size:13px;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)"></textarea><div class="g" style="margin-top:8px"><button id="b-copy">Copiar backup</button><button id="b-rest" class="s" style="padding:11px 14px;font-size:16px">Restaurar</button></div><p id="b-msg" class="mu"></p></div>
+</section>
+</main>
+
+<nav>
+ <button data-t="f"><svg class="i"><use href="#i-cash"/></svg>Frete</button>
+ <button data-t="v"><svg class="i"><use href="#i-route"/></svg>Viagens</button>
+ <button data-t="a"><svg class="i"><use href="#i-fuel"/></svg>Diesel</button>
+ <button data-t="m"><svg class="i"><use href="#i-wrench"/></svg>Revisões</button>
+ <button data-t="c"><svg class="i"><use href="#i-gauge"/></svg>Custos</button>
+</nav>
+
+<script>
+const $=id=>document.getElementById(id),K='caminhao_v1';
+const D={fixo:6000,kmMes:8000,manut:0.35,pneu:0.25,diesel:6.2,cons:2.5,pct:0,odo:0};
+let S={cfg:{},v:[],a:[],m:[]};
+try{const r=JSON.parse(localStorage.getItem(K));if(r&&typeof r==='object')S=Object.assign(S,r)}catch(e){}
+S.cfg=Object.assign({},D,S.cfg);
+S.cfg.use=Object.assign({fixo:1,manut:1,pneu:1,pct:1,comb:1},S.cfg.use);
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const brl=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const nf=(n,d=0)=>n.toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:d});
+const val=id=>{const v=parseFloat(String($(id).value).replace(',','.'));return isNaN(v)?0:v};
+const has=id=>$(id).value.trim()!=='';
+const two=n=>String(n).padStart(2,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate())};
+const fd=d=>d.split('-').reverse().join('/');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rw=(a,b,cl='')=>`<div class="row"><span>${a}</span><b class="${cl}">${b}</b></div>`;
+let last=null,avgKml=0;
+
+/* FRETE */
+function rF(){const c=S.cfg;$('f-die').placeholder=nf(c.diesel,2);$('f-con').placeholder=nf(c.cons,2)}
+function calc(){
+ const c=S.cfg,km=val('f-km'),fr=val('f-frete'),pd=val('f-ped'),ou=val('f-out'),
+ di=has('f-die')?val('f-die'):c.diesel,co=has('f-con')?val('f-con'):c.cons;
+ last=null;
+ if(km<=0||fr<=0){$('f-res').innerHTML='<p class="mu" style="margin:0">Informe o valor do frete e os km para ver o lucro.</p>';return}
+ const u=c.use,comb=u.comb&&co>0?km/co*di:0,fixo=u.fixo&&c.kmMes>0?c.fixo/c.kmMes*km:0,vr=((u.manut?c.manut:0)+(u.pneu?c.pneu:0))*km,cm=u.pct?fr*c.pct/100:0,
+ base=comb+pd+ou+fixo+vr,tot=base+cm,luc=fr-tot,mg=luc/fr*100,eq=base/(1-Math.min(u.pct?c.pct:0,90)/100);
+ last={km,fr,tot,luc,r:$('f-rota').value.trim()};
+ const st=mg>=15?['ok','Compensa']:mg>=0?['wr','Apertado']:['bad','Não compensa'];
+ $('f-res').innerHTML=`<span class="chip ${st[0]}">${st[1]}</span>
+ <div class="big ${luc>=0?'tok':'tbad'}" style="margin:8px 0 2px">${brl(luc)}</div>
+ <div class="mu" style="margin-bottom:8px">lucro líquido, margem de ${nf(mg,1)}%</div>
+ ${rw('Custo por km',brl(tot/km))}${rw('Frete por km',brl(fr/km))}${rw('Frete de equilíbrio',brl(eq))}
+ ${u.comb?rw('Combustível',brl(comb)):''}${rw('Pedágios e outras',brl(pd+ou))}${u.fixo?rw('Custos fixos rateados',brl(fixo)):''}
+ ${u.manut||u.pneu?rw('Manutenção e pneus',brl(vr)):''}${u.pct&&c.pct>0?rw('Comissão do motorista',brl(cm)):''}`;
+}
+
+/* VIAGENS */
+function rV(){
+ const t=new Date(),mk=t.getFullYear()+'-'+two(t.getMonth()+1),vs=S.v.filter(x=>x.d.slice(0,7)===mk),
+ sm=k=>vs.reduce((a,x)=>a+x[k],0);
+ $('v-kp').innerHTML=`<div><b>${vs.length}</b><span>viagens</span></div><div><b>${brl(sm('fr'))}</b><span>frete</span></div><div><b class="${sm('luc')>=0?'tok':'tbad'}">${brl(sm('luc'))}</b><span>lucro</span></div>`;
+ const ms=[];for(let i=5;i>=0;i--){const d=new Date(t.getFullYear(),t.getMonth()-i,1);ms.push(d.getFullYear()+'-'+two(d.getMonth()+1))}
+ const vals=ms.map(k=>S.v.filter(x=>x.d.slice(0,7)===k).reduce((a,x)=>a+x.luc,0)),mx=Math.max(1,...vals.map(Math.abs));
+ $('v-ch').innerHTML='<svg viewBox="0 0 320 120" width="100%" role="img" aria-label="Lucro dos últimos 6 meses"><line x1="0" x2="320" y1="50" y2="50" style="stroke:var(--bd)"/>'+ms.map((k,i)=>{
+  const h=Math.max(Math.abs(vals[i])/mx*34,1),x=12+i*52,p=vals[i]>=0,y=p?50-h:50;
+  return `<rect x="${x}" y="${y}" width="36" height="${h}" rx="3" style="fill:var(${p?'--ok':'--bad'})"/><text x="${x+18}" y="${p?y-4:y+h+11}" text-anchor="middle" font-size="10" style="fill:var(--mu)">${nf(vals[i]/1000,1)}k</text><text x="${x+18}" y="112" text-anchor="middle" font-size="11" style="fill:var(--mu)">${k.slice(5)}/${k.slice(2,4)}</text>`}).join('')+'</svg>';
+ const ls=S.v.map((x,i)=>({...x,i})).sort((a,b)=>b.d.localeCompare(a.d)||b.i-a.i);
+ $('v-ls').innerHTML=ls.length?ls.map(x=>`<div class="row"><span>${esc(x.r||'Sem rota')}<br><span class="mu">${fd(x.d)} · ${nf(x.km)} km · frete ${brl(x.fr)}</span></span><span style="text-align:right"><b class="${x.luc>=0?'tok':'tbad'}">${brl(x.luc)}</b><br><button class="s" data-del="v" data-i="${x.i}" aria-label="Excluir viagem">Excluir</button></span></div>`).join(''):'<p class="mu" style="margin:0">Nenhuma viagem salva. Calcule um frete e toque em Salvar nas viagens.</p>';
+}
+
+/* ABASTECIMENTO: ver bloco DIESEL */
+
+/* REVISÕES */
+function rMold(){
+ const o=S.cfg.odo;
+ $('m-odo').textContent=o>0?`Odômetro atual: ${nf(o)} km (atualiza a cada abastecimento ou em Custos).`:'Informe o odômetro atual em Custos ou registre um abastecimento.';
+ $('m-ls').innerHTML=S.m.length?S.m.map((x,i)=>{
+  const rest=x.last+x.int-o,pc=Math.min(100,Math.max(0,(o-x.last)/x.int*100)),cl=rest<=0?'bad':rest<=1000?'wr':'ok';
+  return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(x.n)}</b><span class="chip ${cl}">${rest<=0?'Vencida há '+nf(-rest)+' km':'Faltam '+nf(rest)+' km'}</span></div><div class="bar"><i style="width:${pc}%;background:var(${cl==='ok'?'--ok':cl==='wr'?'--wr':'--bad'})"></i></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px"><span class="mu">a cada ${nf(x.int)} km, feita aos ${nf(x.last)} km</span><span><button class="s" data-done="${i}">Feita agora</button> <button class="s" data-del="m" data-i="${i}" aria-label="Excluir revisão">Excluir</button></span></div></div>`}).join(''):'<p class="mu" style="margin:0">Nenhuma revisão cadastrada. Adicione óleo, pneus, freios e o que mais você controla.</p>';
+}
+
+/* CUSTOS */
+function rC(){
+ document.querySelectorAll('.cf').forEach(i=>{i.value=String(S.cfg[i.dataset.k]).replace('.',',')});document.querySelectorAll('.tg').forEach(t=>{t.checked=!!S.cfg.use[t.dataset.u]});stC();
+}
+function stC(){
+ const c=S.cfg,u=c.use,fx=u.fixo&&c.kmMes>0?c.fixo/c.kmMes:0,cb=u.comb&&c.cons>0?c.diesel/c.cons:0,vr=(u.manut?c.manut:0)+(u.pneu?c.pneu:0);
+ $('c-st').innerHTML=`<h2><svg class="i"><use href="#i-gauge"/></svg>Seu custo por km</h2>${rw('Fixos rateados',brl(fx))}${rw('Diesel',brl(cb))}${rw('Manutenção e pneus',brl(vr))}${rw('Custo mínimo por km (sem pedágio)',brl(fx+cb+vr),'tbad')}`;
+}
+
+/* NAVEGAÇÃO */
+const T={f:()=>{rF();calc()},v:rV,a:rA,m:rM,c:rC};
+function show(t){
+ document.querySelectorAll('section').forEach(s=>s.classList.toggle('hide',s.id!=='t-'+t));
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+ T[t]();updBadge();window.scrollTo(0,0);
+}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.t)));
+['f-frete','f-km','f-ped','f-out','f-die','f-con'].forEach(id=>$(id).addEventListener('input',calc));
+document.querySelectorAll('.cf').forEach(i=>i.addEventListener('input',()=>{S.cfg[i.dataset.k]=val(i.id);save();stC();updBadge()}));
+
+$('f-save').addEventListener('click',()=>{
+ if(!last){$('f-msg').textContent='Preencha o frete e os km antes de salvar.';return}
+ S.v.push({d:today(),r:last.r,km:last.km,fr:last.fr,custo:last.tot,luc:last.luc});save();
+ ['f-rota','f-frete','f-km','f-ped','f-out'].forEach(id=>$(id).value='');
+ $('f-msg').textContent='Viagem salva na aba Viagens.';calc();
+});
+$('a-add').addEventListener('click',()=>{
+ const o=val('a-o'),l=val('a-l'),p=val('a-p'),full=isFull();
+ if(o<=0||l<=0||p<=0){$('a-m').textContent='Preencha o km, os litros e o preço para salvar.';return}
+ S.a.push({d:$('a-d').value||today(),odo:o,l,p,full});S.cfg.odo=Math.max(S.cfg.odo,o);S.cfg.diesel=p;save();
+ const r=segs(S.a).a.find(x=>x.i===S.a.length-1);
+ ['a-o','a-l','a-p'].forEach(id=>$(id).value='');document.querySelector('input[name="af"][value="1"]').checked=true;$('a-d').value=today();
+ rA();$('a-m').innerHTML='<span class="tok">Salvo!</span>'+(r&&r.kml?' Este tanque rendeu '+nf(r.kml,2)+' km/L.':'');
+});
+$('m-add').addEventListener('click',()=>{
+ const n=$('m-n').value.trim(),i=val('m-i');
+ if(!n||i<=0)return;
+ S.m.push({n,t:$('m-t').value,int:i,last:has('m-l')?val('m-l'):S.cfg.odo});save();
+ ['m-n','m-i','m-l'].forEach(id=>$(id).value='');rM();
+});
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.id==='a-use'){S.cfg.cons=Math.round(avgKml*100)/100;save();rA()}
+ else if(b.dataset.del){S[b.dataset.del].splice(+b.dataset.i,1);save();({v:rV,a:rA,m:rM})[b.dataset.del]()}
+ else if(b.dataset.done!==undefined){S.m[+b.dataset.done].last=S.cfg.odo;save();rM()}
+});
+$('a-d').value=today();
+
+/* REVISÕES COM ÍCONE */
+const SH={oleo:'M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z',pneu:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z',freio:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z',filtro:'M8 3h8l1 3v13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6z',outro:'M7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3z'};
+const DT={oleo:'<path d="M9.5 15a2.8 2.8 0 0 0 2.5 2"/>',pneu:'<circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/>',freio:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="6.5" r=".8"/><circle cx="12" cy="17.5" r=".8"/><circle cx="6.5" cy="12" r=".8"/><circle cx="17.5" cy="12" r=".8"/>',filtro:'<path d="M7 8h10M7 12h10M7 16h10"/>',outro:'<path d="M9 12l2 2 4-4"/>'};
+const DFL={oleo:['Óleo do motor',20000],pneu:['Pneus',80000],freio:['Freios',40000],filtro:['Filtros',20000],outro:['',10000]};
+const kind=x=>x.t&&SH[x.t]?x.t:(String(x.n).toLowerCase().includes('leo')?'oleo':/pneu/i.test(x.n)?'pneu':/freio/i.test(x.n)?'freio':/filtro/i.test(x.n)?'filtro':'outro');
+function rIcon(x,i,pc){
+ const t=kind(x),cl=pc>=90?'--bad':pc>=75?'--wr':'--ok';
+ return `<svg class="ri${pc>=90?' al':''}" viewBox="0 0 24 24" role="img" aria-label="${nf(pc)}% do intervalo usado"><defs><clipPath id="cp${i}"><path d="${SH[t]}"/></clipPath></defs><g clip-path="url(#cp${i})"><rect class="rf" data-y="${(24-24*pc/100).toFixed(1)}" x="0" y="0" width="24" height="24" style="fill:var(${cl});opacity:.9;transform:translateY(24px)"/></g><path d="${SH[t]}" style="fill:none;stroke:var(--tx);stroke-width:1.5;stroke-linejoin:round"/><g style="fill:none;stroke:var(--tx);stroke-width:1.3;stroke-linecap:round;opacity:.7">${DT[t]}</g></svg>`;
+}
+const bd=document.createElement('span');bd.className='nb hide';document.querySelector('nav [data-t="m"]').append(bd);
+function updBadge(){const o=S.cfg.odo,n=S.m.filter(x=>(o-x.last)/x.int*100>=90).length;bd.textContent=n;bd.classList.toggle('hide',!n)}
+function rM(){
+ const o=S.cfg.odo;
+ $('m-odo').textContent=o>0?`Odômetro atual: ${nf(o)} km. O ícone enche conforme você roda.`:'Informe o odômetro atual em Custos ou registre um abastecimento.';
+ const al=S.m.filter(x=>(o-x.last)/x.int*100>=90);
+ $('m-al').innerHTML=al.length?`<div class="alb"><svg class="i"><use href="#i-wrench"/></svg><span>Hora de trocar: ${al.map(x=>esc(x.n)).join(', ')}</span></div>`:'';
+ $('m-ls').innerHTML=S.m.length?S.m.map((x,i)=>{
+  const rest=x.last+x.int-o,raw=(o-x.last)/x.int*100,pc=Math.min(100,Math.max(0,raw)),
+  st=rest<=0?['bad','Vencida há '+nf(-rest)+' km']:raw>=90?['bad','Troque em breve · '+nf(rest)+' km']:raw>=75?['wr','Atenção · faltam '+nf(rest)+' km']:['ok','Faltam '+nf(rest)+' km'];
+  return `<div class="rv">${rIcon(x,i,pc)}<div class="rvb"><div class="rvh"><b>${esc(x.n)}</b><span class="chip ${st[0]}">${st[1]}</span></div><div class="mu">${nf(Math.max(0,o-x.last))} de ${nf(x.int)} km usados (${nf(pc)}%)</div><div class="rva"><button class="s" data-done="${i}">Feita agora</button><button class="s" data-del="m" data-i="${i}" aria-label="Excluir revisão">Excluir</button></div></div></div>`}).join(''):'<p class="mu" style="margin:0">Nenhuma revisão cadastrada. Escolha o tipo (óleo, freios ou filtros) e adicione acima.</p>';
+ requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('.rf').forEach(r=>{r.style.transform='translateY('+r.dataset.y+'px)'})));
+ updBadge();
+}
+$('m-t').addEventListener('change',()=>{const d=DFL[$('m-t').value];if(!$('m-n').value||Object.values(DFL).some(v=>v[0]===$('m-n').value))$('m-n').value=d[0];$('m-i').placeholder='Ex.: '+d[1]});
+
+/* DIESEL */
+function segs(arr){
+ const a=arr.map((x,i)=>({...x,i})).sort((p,q)=>p.odo-q.odo);
+ let base=null,sl=0,sc=0,tk=0,tl=0,tc=0,last=null;
+ a.forEach(x=>{
+  const full=x.full!==false;
+  if(!base){if(full)base=x;return}
+  sl+=x.l;sc+=x.l*x.p;
+  if(full){const dk=x.odo-base.odo;if(dk>0&&sl>0){x.kml=dk/sl;x.dk=dk;x.sl=sl;tk+=dk;tl+=sl;tc+=sc;last=x}base=x;sl=0;sc=0}
+ });
+ return {a,av:tl>0?tk/tl:0,cpk:tk>0?tc/tk:0,last};
+}
+const isFull=()=>document.querySelector('input[name="af"]:checked').value==='1';
+function apv(){
+ const o=val('a-o'),l=val('a-l'),p=val('a-p'),full=isFull(),mx=S.a.reduce((m,x)=>Math.max(m,x.odo),0),box=$('a-pv'),L=[];
+ $('a-m').textContent='';
+ $('a-last').textContent=mx>0?'Último registro: '+nf(mx)+' km':'Digite o km que aparece no painel.';
+ $('a-fh').textContent=full?'Marque esta opção só se completou o tanque até o final. É assim que o app calcula o consumo.':'Sem problema: o app guarda os litros e calcula o consumo no próximo tanque cheio.';
+ if(l>0&&p>0)L.push(`Total a pagar: <b>${brl(l*p)}</b>`);
+ if(o>0&&mx>0&&o<=mx)L.push(`<span class="tbad">O km é menor que o último registro (${nf(mx)} km). Confira o painel.</span>`);
+ else if(o>0&&l>0){
+  if(!full)L.push('Abastecimento parcial: o consumo sai no próximo tanque cheio.');
+  else{const r=segs([...S.a,{d:'',odo:o,l,p,full:true}]).a.find(x=>x.i===S.a.length);
+   L.push(r&&r.kml?`Este tanque rendeu <b class="tok">${nf(r.kml,2)} km/L</b> (${nf(r.dk)} km com ${nf(r.sl,1)} L)`:'Primeiro tanque cheio: serve de ponto de partida. O consumo aparece no próximo.')}
+ }
+ box.innerHTML=L.map(x=>`<p>${x}</p>`).join('');box.className=L.length?'pr':'pr hide';
+}
+function rA(){
+ updBadge();
+ const R=segs(S.a),a=R.a,av=R.av,mk=today().slice(0,7),gm=S.a.filter(x=>x.d.slice(0,7)===mk).reduce((s,x)=>s+x.l*x.p,0),
+ hd='<h2><svg class="i"><use href="#i-gauge"/></svg>Consumo do caminhão</h2>';
+ avgKml=av;
+ if(av>0){
+  const pc=Math.min(100,Math.max(0,(av-1)/4*100)),tr=R.last.kml/av-1;
+  $('a-sum').innerHTML=`${hd}<div class="gw"><div class="gg"><svg viewBox="0 0 120 70" role="img" aria-label="Consumo médio ${nf(av,2)} km/L"><path d="M10 62A50 50 0 0 1 110 62" pathLength="100" style="fill:none;stroke:var(--bd);stroke-width:10;stroke-linecap:round"/><path class="ga" d="M10 62A50 50 0 0 1 110 62" pathLength="100" data-p="${pc.toFixed(1)}" style="fill:none;stroke:var(--ye);stroke-width:10;stroke-linecap:round;stroke-dasharray:0 100"/></svg><div class="gv"><b>${nf(av,2)}</b><span>km/L médio</span></div></div><div class="gs">${rw('Último tanque',nf(R.last.kml,2)+' km/L '+(tr>=0?'▲':'▼'),tr>=0?'tok':'tbad')}${rw('Diesel por km',brl(R.cpk))}${rw('Gasto no mês',brl(gm))}</div></div><button id="a-use" style="width:100%;margin-top:12px">Usar ${nf(av,2)} km/L na calculadora</button>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('.ga').forEach(g=>{g.style.strokeDasharray=g.dataset.p+' 100'})));
+ }else $('a-sum').innerHTML=`${hd}<p class="mu" style="margin:0">${S.a.length?'Falta mais um tanque cheio para calcular. No próximo abastecimento, complete o tanque.':'Ainda sem dados. Registre dois abastecimentos de tanque cheio para ver o consumo real.'}</p>`;
+ $('a-ls').innerHTML=a.length?[...a].reverse().map(x=>{
+  const full=x.full!==false,cl=!x.kml?'':x.kml>=av*0.97?'ok':x.kml>=av*0.9?'wr':'bad',
+  ch=x.kml?`<span class="chip ${cl}">${nf(x.kml,2)} km/L</span>`:full?'<span class="mu">ponto de partida</span>':'<span class="chip wr">parcial</span>';
+  return `<div class="rv"><div class="ai"><svg class="i"><use href="#i-fuel"/></svg></div><div class="rvb"><b>${fd(x.d)}</b> <span class="mu">· ${nf(x.odo)} km</span><div class="mu">${nf(x.l,1)} L a ${brl(x.p)} = ${brl(x.l*x.p)}</div></div><div style="text-align:right">${ch}<br><button class="s" style="margin-top:6px" data-del="a" data-i="${x.i}" aria-label="Excluir abastecimento">Excluir</button></div></div>`}).join(''):'<p class="mu" style="margin:0">Nenhum abastecimento registrado.</p>';
+ apv();
+}
+['a-o','a-l','a-p'].forEach(id=>$(id).addEventListener('input',apv));
+document.querySelectorAll('input[name="af"]').forEach(r=>r.addEventListener('change',apv));
+
+/* AJUDA E OPÇÕES */
+const HP={fixo:['Custos fixos por mês','Some o que você paga rodando ou não: parcela, seguro, IPVA, licenciamento, rastreador e contador. Valores anuais entram divididos por 12. Ex.: 3.500 + 800 + 300 + 150 + 250 = 5.000.'],kmMes:['Km rodados por mês','Pegue o odômetro de hoje, subtraia o de 3 meses atrás e divida por 3. Ex.: (250.000 − 226.000) ÷ 3 = 8.000 km.'],manut:['Manutenção (R$/km)','Some o que gastou no último ano com óleo, filtros, freios, suspensão e mão de obra e divida pelos km rodados no mesmo período. Ex.: 28.000 ÷ 80.000 km = 0,35.'],pneu:['Pneus (R$/km)','Multiplique o número de pneus pelo preço de cada um (somando recapagens) e divida pela vida útil total em km. Ex.: 24.000 ÷ 100.000 km = 0,24.'],pct:['Comissão do motorista (%)','Porcentagem do frete combinada com o seu motorista. Se você mesmo dirige, deixe 0.'],odo:['Odômetro atual','É o km que aparece no painel do caminhão. Depois atualiza sozinho a cada abastecimento registrado.'],diesel:['Diesel padrão (R$/L)','Preço do litro que você costuma pagar. Atualiza sozinho ao registrar um abastecimento.'],cons:['Consumo padrão (km/L)','Encha o tanque e zere o trip. No próximo tanque cheio, divida os km rodados pelos litros abastecidos. Ex.: 600 ÷ 240 = 2,5. A aba Diesel calcula a média real para você.']};
+document.querySelectorAll('.cf').forEach(i=>{const l=document.querySelector('label[for="'+i.id+'"]'),b=document.createElement('button');b.type='button';b.className='q';b.dataset.h=i.dataset.k;b.setAttribute('aria-label','Ajuda: '+HP[i.dataset.k][0]);b.textContent='?';l.append(' ',b)});
+document.addEventListener('click',e=>{const q=e.target.closest('.q');if(q){const h=HP[q.dataset.h];$('hlp-t').textContent=h[0];$('hlp-p').textContent=h[1];$('hlp').classList.remove('hide')}else if(e.target.closest('#hlp-x')||!e.target.closest('#hlp'))$('hlp').classList.add('hide')});
+document.querySelectorAll('.tg').forEach(t=>t.addEventListener('change',()=>{S.cfg.use[t.dataset.u]=t.checked;save();stC()}));
+
+/* BACKUP */
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+$('b-copy').addEventListener('click',async()=>{const t=JSON.stringify(S);$('b-txt').value=t;try{await navigator.clipboard.writeText(t);$('b-msg').textContent='Backup copiado. Cole em um lugar seguro, como Mensagens salvas do WhatsApp ou e-mail.'}catch(e){$('b-txt').select();$('b-msg').textContent='Selecione e copie o texto acima para guardar.'}});
+$('b-rest').addEventListener('click',()=>{try{const r=JSON.parse($('b-txt').value);if(!r||!Array.isArray(r.v)||!Array.isArray(r.a)||!Array.isArray(r.m)||typeof r.cfg!=='object')throw 0;S={cfg:Object.assign({},D,r.cfg),v:r.v,a:r.a,m:r.m};S.cfg.use=Object.assign({fixo:1,manut:1,pneu:1,pct:1,comb:1},S.cfg.use);save();rC();$('b-msg').textContent='Dados restaurados.'}catch(e){$('b-msg').textContent='Backup inválido. Cole o texto completo copiado antes.'}});
+
+/* LOGIN */
+let started=false;
+function openApp(u){document.body.classList.remove('lk');$('gate').classList.add('hide');$('u-em').textContent=u.email||'';if(!started){started=true;show('f')}}
+function showGate(){started=false;document.body.classList.add('lk');$('gate').classList.remove('hide');$('g-p').value=''}
+const ERR={'auth/invalid-credential':'E-mail ou senha incorretos.','auth/wrong-password':'E-mail ou senha incorretos.','auth/user-not-found':'E-mail ou senha incorretos.','auth/invalid-email':'Digite um e-mail válido.','auth/user-disabled':'Este acesso foi desativado. Fale com o vendedor.','auth/too-many-requests':'Muitas tentativas. Aguarde alguns minutos e tente de novo.','auth/network-request-failed':'Sem internet. Conecte e tente de novo.'};
+async function doLogin(){
+ const e=$('g-e').value.trim(),p=$('g-p').value;
+ if(!e||!p){$('g-m').textContent='Digite o e-mail e a senha.';return}
+ if(!window.FB){$('g-m').textContent='Não foi possível carregar o login. Verifique a internet.';return}
+ $('g-go').disabled=true;$('g-m').textContent='Entrando...';
+ try{await FB.login(e,p);$('g-m').textContent=''}catch(x){$('g-m').textContent=ERR[x.code]||'Não foi possível entrar. Tente de novo.'}
+ $('g-go').disabled=false;
+}
+$('g-go').addEventListener('click',doLogin);
+$('g-p').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+$('u-out').addEventListener('click',()=>{if(window.FB)FB.logout()});
+function boot(){FB.onAuth(u=>{if(u)openApp(u);else showGate()})}
+if(window.FB)boot();else addEventListener('fbready',boot,{once:true});
+</script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+const app=initializeApp({apiKey:"AIzaSyB-tFksvTE4xBahQhL5DThWWnfRumqiBMA",authDomain:"meu-caminhao26.firebaseapp.com",projectId:"meu-caminhao26",storageBucket:"meu-caminhao26.firebasestorage.app",messagingSenderId:"905926540946",appId:"1:905926540946:web:c8203e7da2931970c6704b"});
+const auth=getAuth(app);
+window.FB={login:(e,p)=>signInWithEmailAndPassword(auth,e,p),logout:()=>signOut(auth),onAuth:f=>onAuthStateChanged(auth,f)};
+window.dispatchEvent(new Event('fbready'));
+</script>
+</body>
+</html>
